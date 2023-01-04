@@ -1,27 +1,27 @@
-# Installing an SSL Certificate on a Windows Server with ansible
+# Installing an SSL Certificate on a Windows Server with Ansible
 
-In this tutorial, I will show you how to use Ansible to install an SSL certificate on a Windows server. Using ansible to automate the SSL certificate installation process can improve efficiency, consistency, and collaboration in your IT operations. I will cover the following steps:
+In this tutorial, I will show you how to use Ansible to install an SSL certificate on a Windows server. Using Ansible to automate the SSL certificate installation process can improve efficiency, consistency, and collaboration in your IT operations. I will cover the following steps:
 
 1. Copying the SSL certificate file to the server
 2. Importing the PFX certificate to the specified store
 3. Get imported certificate
 4. Binding the certificate to the websites
 5. Restarting the websites
-6. Playbook execution
+6. Run Ansible playbook
 
 ## Benefits of Installing SSL Certificates on Windows Servers with Ansible
 
-Installing an SSL certificate on a Windows server using ansible automation has several benefits in IT operations:
+Installing an SSL certificate on a Windows server using Ansible automation has several benefits in IT operations:
 
-- **Efficiency:** Automating the installation process with ansible saves time and effort compared to manually installing the SSL certificate on each server. This is especially useful if you have multiple servers that need to be configured with SSL certificates.
+- **Efficiency:** Automating the installation process with Ansible saves time and effort compared to manually installing the SSL certificate on each server. This is especially useful if you have multiple servers that need to be configured with SSL certificates.
 
-- **Consistency:** Using ansible ensures that the SSL certificate is installed consistently on all servers. This helps to prevent configuration errors and ensures that all servers are properly secured.
+- **Consistency:** Using Ansible ensures that the SSL certificate is installed consistently on all servers. This helps to prevent configuration errors and ensures that all servers are properly secured.
 
-- **Repeatability:** If you need to install SSL certificates on new servers in the future, you can simply re-run the ansible playbook to automate the process. This saves time and reduces the risk of errors.
+- **Repeatability:** If you need to install SSL certificates on new servers in the future, you can simply re-run the Ansible playbook to automate the process. This saves time and reduces the risk of errors.
 
-- **Version control:** Using ansible allows you to version control the SSL installation process. This means that you can track changes to the playbook over time, and revert to previous versions if necessary.
+- **Version control:** Using Ansible allows you to version control the SSL installation process. This means that you can track changes to the playbook over time, and revert to previous versions if necessary.
 
-- **Collaboration:** Collaborating on an ansible playbook with your team makes it easier to share knowledge and responsibilities, and ensures that everyone is following the same process.
+- **Collaboration:** Collaborating on an Ansible playbook with your team makes it easier to share knowledge and responsibilities, and ensures that everyone is following the same process.
 
 ## Prerequisites
 
@@ -115,7 +115,7 @@ Finally, I will use the `win_iis_website` module to restart the websites. This s
 
 This task restarts the websites that are specified in the `iis_target_website_names` list, except for the Default Web Site. The `win_iis_website` module is used to manage the state of an IIS website. In this case, the state option is set to started, which means that the website will be started if it is stopped, or left as-is if it is already started. The `when` condition ensures that the Default Web Site is not affected by this task. This is useful if you don't want to restart the Default Web Site for some reason. The `loop` option specifies that the task should be applied to each website in the `iis_target_website_names` list. This allows you to specify multiple websites to be restarted with a single task.
 
-## Step 6: Run ansible playbook
+## Step 6: Run Ansible playbook
 
 The `ansible-playbook` command is used to run an Ansible playbook. A playbook is a script that defines a series of tasks that will be executed by Ansible on managed host(s).
 
