@@ -1,0 +1,40 @@
+---
+- name: Install SSL Certificate on Windows Server
+  hosts: windows
+  tasks:
+
+  - name: Copy SSL certificate file to server
+    win_copy:
+      src: "{{ certificate_source_path }}\\{{ certificate_name }}.{{ certificate_file_extension }}"
+      dest: "{{ certificate_target_path }}\\{{ certificate_name }}.{{ certificate_file_extension }}" 
+
+  - name: Import PFX Certificate
+    win_pfx_certificate:
+      path: "{{ certificate_target_path }}\\{{ certificate_name }}.{{ certificate_file_extension }}" 
+      password: "{{ certificate_password }}"
+      store: "{{ store_name }}"
+      exportable: yes
+      force: yes
+
+  - name: Get Certificate
+    win_certificate:
+      name: "{{ certificate_name }}"
+      store: "{{ store_name }}"
+    register: imported_certificate
+
+  - name: Bind Certificate to Websites (except Default Web Site)
+    win_iis_website_binding:
+      name: "{{ item }}"
+      certificate_hash: "{{ imported_certificate.thumbprint }}"
+      certificate_store: "{{ store_name }}"
+      binding_information: "*:443:"
+      state: present
+    when: "item != 'Default Web Site'"
+    loop: "{{ iis_target_website_names }}"
+
+  - name: Restart Websites (except Default Web Site)
+    win_iis_website:
+      name: "{{ item }}"
+      state: started
+    when: "item != 'Default Web Site'"
+    loop: "{{ iis_target_website_names }}"
