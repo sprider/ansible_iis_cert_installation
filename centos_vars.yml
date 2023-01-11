@@ -1,0 +1,11 @@
+---
+certificate_source_path: "/path/to/certificate/source"
+certificate_target_path: "/path/to/certificate/target"
+certificate_name: "my_certificate"
+certificate_file_extension: "crt"
+web_server_config_file: "/path/to/web/server/config/file"
+web_server_service_name: "httpd"
+websites:
+  - example.com
+  - example.net
+  - example.org

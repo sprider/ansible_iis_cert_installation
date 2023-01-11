@@ -1,0 +1,36 @@
+---
+- name: Install SSL Certificate on CentOS Server
+  hosts: centos
+  tasks:
+    - name: Copy SSL certificate file to server
+      copy:
+        src: "{{ certificate_source_path }}/{{ certificate_name }}.{{ certificate_file_extension }}"
+        dest: "{{ certificate_target_path }}/{{ certificate_name }}.{{ certificate_file_extension }}"
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Install SSL certificate
+      shell: |
+        sudo openssl x509 -in "{{ certificate_target_path }}/{{ certificate_name }}.{{ certificate_file_extension }}" -out "{{ certificate_target_path }}/{{ certificate_name }}.pem"
+        sudo openssl rsa -in "{{ certificate_source_path }}/{{ certificate_name }}.key" -out "{{ certificate_target_path }}/{{ certificate_name }}.key"
+        sudo openssl pkcs12 -export -out "{{ certificate_target_path }}/{{ certificate_name }}.p12" -in "{{ certificate_target_path }}/{{ certificate_name }}.pem" -inkey "{{ certificate_target_path }}/{{ certificate_name }}.key" -passout pass:"{{ lookup('env', 'CERTIFICATE_PASSWORD') }}"
+
+    - name: Bind SSL certificate to websites
+      lineinfile:
+        path: "{{ web_server_config_file }}"
+        regexp: "^(SSLCertificateFile|SSLCertificateKeyFile|SSLCACertificatePath|SSLCACertificateFile)"
+        line: '\1 {{ certificate_target_path }}/{{ certificate_name }}.pem'
+        backrefs: yes
+        insertafter: "^(#|)SSLCertificateFile"
+      with_items: "{{ websites }}"
+      when: item|last
+      notify:
+        - restart web server
+
+  handlers:
+    - name: restart web server
+      service:
+        name: "{{ web_server_service_name }}"
+        state: restarted
+      when: ansible_os_family == 'RedHat'
+      ignore_errors: yes

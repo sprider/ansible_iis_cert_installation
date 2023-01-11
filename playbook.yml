@@ -11,7 +11,7 @@
   - name: Import PFX Certificate
     win_pfx_certificate:
       path: "{{ certificate_target_path }}\\{{ certificate_name }}.{{ certificate_file_extension }}" 
-      password: "{{ certificate_password }}"
+      password: "{{ lookup('env', 'CERTIFICATE_PASSWORD') }}"
       store: "{{ store_name }}"
       exportable: yes
       force: yes

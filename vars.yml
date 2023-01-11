@@ -1,9 +1,8 @@
 ---
-certificate_source_path: "C:\\certs\\source"
-certificate_target_path: "C:\\certs\\target"
+certificate_source_path: "C:\\path\\to\\certificate\\source"
+certificate_target_path: "C:\\path\\to\\certificate\\target"
 certificate_name: "mycert"
 certificate_file_extension: "pfx"
-certificate_password: "******"
 store_name: "Personal"
 iis_target_website_names:
   - Site_XYZ
